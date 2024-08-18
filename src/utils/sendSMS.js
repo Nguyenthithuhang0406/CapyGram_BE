@@ -8,7 +8,6 @@ const sendSMS = async (phone, fullname, otp) => {
   const now = Math.floor(Date.now() / 1000);
   const exp = now + 3600;
 
-  // const header = { cty: "stringee-api;v=1" };
   const header = {
     "typ": "JWT",
     "alg": "HS256",
@@ -18,7 +17,7 @@ const sendSMS = async (phone, fullname, otp) => {
     jti: apiKeySid + "-" + now,
     iss: apiKeySid,
     exp: exp,
-    rest_api: 1
+    rest_api: true
   };
 
   const token = jwt.sign(payload, apiSecret, { algorithm: 'HS256', header: header })
