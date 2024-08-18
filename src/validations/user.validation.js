@@ -53,4 +53,40 @@ const registerValidation = {
   }),
 };
 
-module.exports = { registerValidation };
+const login = {
+  body: joi.object({
+    username: joi.string()
+      .min(5)
+      .max(30)
+      .required()
+      .messages({
+        'string.min': 'Tên đăng nhập phải có ít nhất 5 ký tự',
+        'string.max': 'Tên đăng nhập không được vượt quá 30 ký tự',
+        'any.required': 'Tên đăng nhập không được để trống',
+      }),
+    password: joi.string()
+      .min(8)
+      .max(16)
+      .pattern(/[!@#$%^&*(),.?":{}|<>]/)
+      .pattern(/\d/)
+      .pattern(/[A-Za-z].*[A-Za-z]/)
+      .required()
+      .messages({
+        'string.min': 'Mật khẩu phải có ít nhất 8 ký tự',
+        'string.max': 'Mật khẩu không được vượt quá 16 ký tự',
+        'string.pattern.base': 'Mật khẩu phải chứa ít nhất 1 ký tự số, 1 ký tự đặc biệt và 2 ký tự chữ cái',
+        'any.required': 'Mật khẩu không được để trống',
+      }),
+  }),
+};
+
+const refreshToken = {
+  body: joi.object({
+    refreshToken: joi.string()
+      .required()
+      .messages({
+        'any.required': 'Refresh token không được để trống',
+      }),
+  }),
+};
+module.exports = { registerValidation, login, refreshToken };
