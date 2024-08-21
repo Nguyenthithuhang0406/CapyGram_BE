@@ -16,11 +16,11 @@ const auth = catchAsync(async (req, res, next) => {
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
     
     const user = await User.findById(payload.userID);
 
-    if (!user) {
+    if (!user || user.isVerified === false) {
       return res.status(404).json({
         message: "User not found",
         code: 404,
