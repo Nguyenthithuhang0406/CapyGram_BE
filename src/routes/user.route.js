@@ -10,5 +10,7 @@ userRoute.post('/register', validate(userValidation.registerValidation), userCon
 userRoute.post('/verify', userController.verifyOtp);
 userRoute.post('/login', validate(userValidation.login), userController.login);
 userRoute.post("/refresh-tokens", validate(userValidation.refreshToken), userController.getRefreshToken);
+userRoute.get('/:userId', auth, validate(userValidation.getUserById), userController.getUserById);
+userRoute.post('/search', auth, validate(userValidation.searchUserByUsernameOrFullname), userController.searchUserByUsernameOrFullname);
 
 module.exports = userRoute;

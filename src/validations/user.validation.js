@@ -1,5 +1,6 @@
 const joi = require('joi');
 const { validateEmail, validateNumber } = require('./utils.validation');
+const { ObjectId } = require('./custom.validation');
 
 const registerValidation = {
   body: joi.object({
@@ -14,11 +15,11 @@ const registerValidation = {
       }),
     email: joi.string()
       .custom((value, helpers) => {
-        
+
         if (!validateEmail(value) && !validateNumber(value)) {
           return helpers.error('any.invalid', { message: 'Email hoặc số điện thoại không hợp lệ' });
         }
-        
+
         return value;
       }, "Email hoặc số điện thoại không hợp lệ")
       .required(),
@@ -89,4 +90,25 @@ const refreshToken = {
       }),
   }),
 };
-module.exports = { registerValidation, login, refreshToken };
+
+const getUserById = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'User ID không được để trống',
+      }),
+  }),
+};
+
+const searchUserByUsernameOrFullname = {
+  body: joi.object({
+    input: joi.string()
+      .required()
+      .messages({
+        'any.required': 'Input không được để trống',
+      }),
+  }),
+};
+module.exports = { registerValidation, login, refreshToken, getUserById, searchUserByUsernameOrFullname };

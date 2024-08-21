@@ -171,5 +171,69 @@ const getRefreshToken = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid refresh token!");
   }
 });
-module.exports = { register, verifyOtp, login, getRefreshToken };
+
+const getUserById = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  console.log("userId", userId);
+  if(!userId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User ID is required!");
+  }
+
+  const user = await User.findById(userId);
+  if(!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get user by ID successfully!",
+    code: httpStatus.OK,
+    data: {
+      user,
+    },
+  });
+ 
+});
+
+const searchUserByUsernameOrFullname = catchAsync(async (req, res) => {
+  const { input } = req.body;
+  console.log("input", input);
+
+  if(!input) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Input is required!");
+  }
+
+
+  //đk tìm kiếm gần đúng
+  const searchCriteria = {
+    $or: [
+      { username: { $regex: input, $options: 'i' } },
+      { fullname: { $regex: input, $options: 'i' } },
+    ],
+  };
+
+  const users = await User.find(searchCriteria);
+
+  if(users.length === 0) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "No user found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Search user by username or fullname successfully!",
+    code: httpStatus.OK,
+    data: {
+      users,
+    },
+  });
+});
+
+const updateProfile = catchAsync(async (req, res) => {
+});
+
+const uploadAvatar = catchAsync(async (req, res) => {
+});
+
+module.exports = { register, verifyOtp, login, getRefreshToken, getUserById, searchUserByUsernameOrFullname };
 
