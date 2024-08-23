@@ -230,15 +230,13 @@ const searchUserByUsernameOrFullname = catchAsync(async (req, res) => {
   });
 });
 
-const updateProfile = catchAsync(async (req, res) => {
-});
 
 const uploadAvatar = catchAsync(async (req, res) => {
   const {userId} = req.body;
   if (!req.file) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Avatar image is required!");
   }
-
+  
   const bucket = admin.storage().bucket();
   const blob = bucket.file(`Avatars/${Date.now()}_${req.file.originalname}`);
   const blobStream = blob.createWriteStream({
@@ -246,25 +244,25 @@ const uploadAvatar = catchAsync(async (req, res) => {
       contentType: req.file.mimetype,
     },
   });
-
+  
   const uploadPromises = new Promise((resolve, reject) => {
     blobStream.on("error", (error) => {
       // console.error(error);
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to upload avatar!");
     });
-
+    
     blobStream.on("finish", () => {
       // Không hard code url nhé
       const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(bucket.name)}/o/${encodeURIComponent(blob.name)}?alt=media`;
       resolve(publicUrl);
     });
-
+    
     blobStream.end(req.file.buffer);
   });
-
+  
   try {
     const avatarUrl = await uploadPromises;
-
+    
     const user = await User.findByIdAndUpdate(userId, { avatarUrl }, { new: true });
     res.status(httpStatus.OK).json({
       message: "Avatar uploaded successfully!",
@@ -278,5 +276,23 @@ const uploadAvatar = catchAsync(async (req, res) => {
   }
 });
 
-module.exports = { register, verifyOtp, login, getRefreshToken, getUserById, searchUserByUsernameOrFullname, uploadAvatar };
+const updateProfile = catchAsync(async (req, res) => {
+  const { gender, website, bio } = req.body;
+  const { userId } = req.params;
+  const user = await User.findByIdAndUpdate(userId, { gender, website, bio }, { new: true });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Update profile successfully!",
+    code: httpStatus.OK,
+    data: {
+      user,
+    },
+  });
+
+});
+module.exports = { register, verifyOtp, login, getRefreshToken, getUserById, searchUserByUsernameOrFullname, uploadAvatar, updateProfile };
 
