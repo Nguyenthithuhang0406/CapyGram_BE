@@ -111,4 +111,20 @@ const searchUserByUsernameOrFullname = {
       }),
   }),
 };
-module.exports = { registerValidation, login, refreshToken, getUserById, searchUserByUsernameOrFullname };
+
+const updateProfile = {
+  body: joi.object({
+    gender: joi.string().optional(),
+    website: joi.string().optional(),
+    bio: joi.string().optional()
+  }),
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'User ID không được để trống',
+      }),
+  }),
+}
+module.exports = { registerValidation, login, refreshToken, getUserById, searchUserByUsernameOrFullname, updateProfile };
