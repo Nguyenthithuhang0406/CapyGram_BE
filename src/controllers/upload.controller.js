@@ -3,14 +3,15 @@ const { admin } = require("../../config/firebase.config");
 const ApiError = require("../utils/apiError");
 const catchAsync = require("../utils/catchAsync");
 
-const uploadImages = catchAsync(async (req, res) => {
+const uploadFiles = catchAsync(async (req, res) => {
   if (!req.files || req.files.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Avatar is required!");
   }
 
   const bucket = admin.storage().bucket();
   const uploadPromises = req.files.map((file) => {
-    const blob = bucket.file(`CapyGram/${Date.now()}/${file.originalname}`);
+    const folder = file.mimetype.startsWith("image") ? "images" : "videos";
+    const blob = bucket.file(`CapyGram/${folder}/${Date.now()}/${file.originalname}`);
     const blobStream = blob.createWriteStream({
       metadata: {
         contentType: file.mimetype,
@@ -31,15 +32,15 @@ const uploadImages = catchAsync(async (req, res) => {
     });
   });
 
-  const imageUrls = await Promise.all(uploadPromises);
+  const fileUrls = await Promise.all(uploadPromises);
 
   return res.status(httpStatus.OK).json({
     message: "Upload avatar successfully!",
     code: httpStatus.OK,
     data: {
-      imageUrls,
+      fileUrls,
     },
   });
 });
 
-module.exports = uploadImages;
+module.exports = uploadFiles;
