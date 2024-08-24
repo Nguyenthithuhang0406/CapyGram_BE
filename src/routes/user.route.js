@@ -4,7 +4,7 @@ const userValidation = require('../validations/user.validation');
 const userController = require('../controllers/user.controller');
 const { auth } = require('../middlewares/auth.middleware');
 const upload = require('../middlewares/upload.middleware');
-const uploadFiles = require('../controllers/upload.controller');
+// const uploadFiles = require('../controllers/upload.controller');
 
 const userRoute = express.Router();
 
@@ -15,7 +15,7 @@ userRoute.post("/refresh-tokens", validate(userValidation.refreshToken), userCon
 userRoute.get('/:userId', auth, validate(userValidation.getUserById), userController.getUserById);
 userRoute.post('/search', auth, validate(userValidation.searchUserByUsernameOrFullname), userController.searchUserByUsernameOrFullname);
 userRoute.post('/upload-avatar', auth, upload.single('avatar'), userController.uploadAvatar);
-userRoute.post('/upload-files', upload.array('media', 20), uploadFiles);
+// userRoute.post('/upload-files', upload.array('media', 20), uploadFiles);
 userRoute.put('/updateProfile/:userId', auth, validate(userValidation.updateProfile), userController.updateProfile);
 
 module.exports = userRoute;

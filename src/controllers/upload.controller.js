@@ -3,7 +3,7 @@ const { admin } = require("../../config/firebase.config");
 const ApiError = require("../utils/apiError");
 const catchAsync = require("../utils/catchAsync");
 
-const uploadFiles = catchAsync(async (req, res) => {
+const uploadFiles = catchAsync(async (req, res, next) => {
   if (!req.files || req.files.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Avatar is required!");
   }
@@ -32,15 +32,24 @@ const uploadFiles = catchAsync(async (req, res) => {
     });
   });
 
+
   const fileUrls = await Promise.all(uploadPromises);
 
-  return res.status(httpStatus.OK).json({
-    message: "Upload avatar successfully!",
-    code: httpStatus.OK,
-    data: {
-      fileUrls,
-    },
-  });
+  try {
+    req.body.media = fileUrls;
+    next();
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    
+  }
+  // return res.status(httpStatus.OK).json({
+  //   message: "Upload avatar successfully!",
+  //   code: httpStatus.OK,
+  //   data: {
+  //     fileUrls,
+  //   },
+  // });
+
 });
 
 module.exports = uploadFiles;
