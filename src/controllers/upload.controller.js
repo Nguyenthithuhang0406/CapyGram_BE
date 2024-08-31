@@ -36,19 +36,16 @@ const uploadFiles = catchAsync(async (req, res, next) => {
   const fileUrls = await Promise.all(uploadPromises);
 
   try {
-    req.body.media = fileUrls;
+    // req.body.media = fileUrls;
+    // req.body.media = [...(req.body.media || []), ...fileUrls];
+    //đang gắn fileUrls vào req và cập nhật ở createPost và updatePost, validation, 
+    //cách khác là gắn vào media
+    req.body.newUrls = fileUrls;
     next();
   } catch (error) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    
+
   }
-  // return res.status(httpStatus.OK).json({
-  //   message: "Upload avatar successfully!",
-  //   code: httpStatus.OK,
-  //   data: {
-  //     fileUrls,
-  //   },
-  // });
 
 });
 
