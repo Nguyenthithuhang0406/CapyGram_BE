@@ -147,11 +147,38 @@ const likePost = catchAsync(async (req, res) => {
   });
 });
 
+
+const sharePost = catchAsync(async (req, res) => {
+  const { postId, userId } = req.params;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  post.shares.push(userId);
+
+  await post.save();
+
+  return res.status(httpStatus.OK).json({
+    message: "Share post successfully!",
+    code: httpStatus.OK,
+    data: {
+      post,
+    },
+  });
+});
+
 module.exports = {
   createPost,
   getAllPosts,
   updatePost,
   deletePost,
   getPostByUserId,
-  likePost
+  likePost,
+  sharePost,
 }

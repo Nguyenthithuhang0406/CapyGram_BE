@@ -84,11 +84,30 @@ const likePost = {
       }),
   }),
 };
+
+const sharePost = {
+  params: joi.object({
+    postId: joi.string()
+      .custom(ObjectId)
+      .required()
+      .messages({
+        'any.required': 'postId is required!',
+      }),
+    userId: joi.string()
+      .custom(ObjectId)
+      .required()
+      .messages({
+        'any.required': 'userId is required!',
+      }),
+  }),
+};
+
 module.exports = {
   createPost,
   updatePost,
   deletePost,
   getPostByUserId,
-  likePost
+  likePost,
+  sharePost,
 };
 
