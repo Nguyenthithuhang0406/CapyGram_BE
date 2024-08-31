@@ -3,7 +3,7 @@ const Post = require("../models/post.model");
 const catchAsync = require("../utils/catchAsync")
 
 const createPost = catchAsync(async (req, res) => {
-  const { content, media, userId } = req.body;
+  const { content, media, userId, newUrls } = req.body;
 
   if (!userId) {
     return res.status(httpStatus.BAD_REQUEST).json({
@@ -15,7 +15,7 @@ const createPost = catchAsync(async (req, res) => {
   const post = new Post({
     userId,
     content,
-    media,
+    media: newUrls,
   });
 
   await post.save();
@@ -29,4 +29,129 @@ const createPost = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = {createPost}
+const updatePost = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const { content, media, userId, newUrls } = req.body;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  if (post.userId.toString() !== userId) {
+    return res.status(httpStatus.FORBIDDEN).json({
+      message: "You are not authorized to update this post!",
+      code: httpStatus.FORBIDDEN,
+    });
+  }
+
+  post.content = content || post.content;
+  post.media = [...media, ...newUrls] ;
+
+  await post.save();
+
+  return res.status(httpStatus.OK).json({
+    message: "Update post successfully!",
+    code: httpStatus.OK,
+    data: {
+      post,
+    },
+  });
+});
+  
+const deletePost = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  if (post.userId.toString() !== userId) {
+    return res.status(httpStatus.FORBIDDEN).json({
+      message: "You are not authorized to delete this post!",
+      code: httpStatus.FORBIDDEN,
+    });
+  }
+
+  await post.deleteOne();
+
+  return res.status(httpStatus.OK).json({
+    message: "Delete post successfully!",
+    code: httpStatus.OK,
+  });
+});
+  
+const getAllPosts = catchAsync(async (req, res) => {
+  const posts = await Post.find();
+
+  return res.status(httpStatus.OK).json({
+    message: "Get all posts successfully!",
+    code: httpStatus.OK,
+    data: {
+      posts,
+    },
+  });
+});
+
+const getPostByUserId = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const posts = await Post.find({ userId });
+
+  return res.status(httpStatus.OK).json({
+    message: "Get posts by userId successfully!",
+    code: httpStatus.OK,
+    data: {
+      posts,
+    },
+  });
+});
+
+
+const likePost = catchAsync(async (req, res) => {
+  const { postId, userId } = req.params;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  if (post.likes.includes(userId)) {
+    post.likes = post.likes.filter((like) => like !== userId);
+  } else {
+    post.likes.push(userId);
+  }
+
+  await post.save();
+
+  return res.status(httpStatus.OK).json({
+    message: "Like post successfully!",
+    code: httpStatus.OK,
+    data: {
+      post,
+    },
+  });
+});
+
+module.exports = {
+  createPost,
+  getAllPosts,
+  updatePost,
+  deletePost,
+  getPostByUserId,
+  likePost
+}
