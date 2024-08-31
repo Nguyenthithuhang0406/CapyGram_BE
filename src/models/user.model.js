@@ -37,16 +37,16 @@ const UserSchema = new Schema({
   bio: {
     type: String,
   },
-  // followers: {
-  //   type: [mongoose.Schema.Types.ObjectId],
-  //   default: [],
-  //   ref: "User",
-  // },
-  // following: {
-  //   type: [mongoose.Schema.Types.ObjectId],
-  //   default: [],
-  //   ref: "User",
-  // },
+  followers: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    ref: "User",
+  },
+  following: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    ref: "User",
+  },
   isVerified: {
     type: Boolean,
     default: false,

@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRoute = require("./src/routes/user.route");
 const { connectDB } = require("./src/utils/db");
 const postRoute = require("./src/routes/post.route");
+const graphRoute = require("./src/routes/graph.route");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/user", userRoute);
 app.use("/api/post", postRoute);
+app.use("/api/graph", graphRoute);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
