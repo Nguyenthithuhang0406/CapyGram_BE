@@ -14,4 +14,5 @@ postRoute.delete('/deletePost/:postId', auth, validate(postValidation.deletePost
 postRoute.get('/getAllPosts', postController.getAllPosts);
 postRoute.get('/getPostByUserId/:userId',auth, validate(postValidation.getPostByUserId), postController.getPostByUserId);
 postRoute.put('/:userId/likePost/:postId', auth, validate(postValidation.likePost), postController.likePost);
+postRoute.put('/:userId/sharePost/:postId', auth, validate(postValidation.sharePost), postController.sharePost);
 module.exports = postRoute;
