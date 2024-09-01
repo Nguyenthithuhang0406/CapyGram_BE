@@ -40,6 +40,100 @@ const followOrUnfollow = catchAsync(async (req, res) => {
 
 });
 
+
+const getCountFollowers = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "User not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get count followers successfully!",
+    code: httpStatus.OK,
+    data: {
+      count: user.followers.length,
+    },
+  });
+});
+
+const getCountFollowings = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "User not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get count followings successfully!",
+    code: httpStatus.OK,
+    data: {
+      count: user.following.length,
+    },
+  });
+});
+
+
+const getFollowers = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "User not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  const followers = await User.find({ _id: { $in: user.followers } });
+
+  return res.status(httpStatus.OK).json({
+    message: "Get followers successfully!",
+    code: httpStatus.OK,
+    data: {
+      followers,
+    },
+  });
+
+});
+
+const getFollowings = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "User not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  const followings = await User.find({ _id: { $in: user.following } });
+  return res.status(httpStatus.OK).json({
+    message: "Get followings successfully!",
+    code: httpStatus.OK,
+    data: {
+      followings,
+    },
+  });
+});
+
 module.exports = {
   followOrUnfollow,
+  getCountFollowers,
+  getCountFollowings,
+  getFollowers,
+  getFollowings,
 };
