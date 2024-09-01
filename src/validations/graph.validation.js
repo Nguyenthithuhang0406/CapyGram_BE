@@ -20,6 +20,58 @@ const followOrUnfollow = {
   }),
 };
 
+const getCountFollowers = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .description("User ID")
+      .messages({
+        'any.required': 'userId is required!'
+      }),
+  }),
+};
+
+const getCountFollowings = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .description("User ID")
+      .messages({
+        'any.required': 'userId is required!'
+      }),
+  }),
+};
+
+const getFollowers = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .description("User ID")
+      .messages({
+        'any.required': 'userId is required!'
+      }),
+  }),
+};
+
+const getFollowings = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .description("User ID")
+      .messages({
+        'any.required': 'userId is required!'
+      }),
+  }),
+};
+
 module.exports = {
   followOrUnfollow,
+  getCountFollowers,
+  getCountFollowings,
+  getFollowers,
+  getFollowings,
 };
