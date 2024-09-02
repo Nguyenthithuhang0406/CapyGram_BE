@@ -22,11 +22,11 @@ const PostSchema = new Schema({
     default: [],
     ref: "User",
   },
-  // comments: {
-  //   type: [mongoose.Schema.Types.ObjectId],
-  //   default: [],
-  //   ref: "Comment",
-  // },
+  comments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    ref: "Comment",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
