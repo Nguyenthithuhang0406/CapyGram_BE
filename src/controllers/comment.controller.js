@@ -74,7 +74,29 @@ const deletedComment = catchAsync(async (req, res) => {
   });
 });
 
+const getComments = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId).populate("comments");
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get comments successfully!",
+    code: httpStatus.OK,
+    data: {
+      comments: post.comments,
+    },
+  });
+});
+
 module.exports = {
   createdComment,
   deletedComment,
+  getComments,
 };

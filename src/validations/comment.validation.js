@@ -35,7 +35,19 @@ const deletedComment = {
       }),
   }),
 };
+
+const getComments = {
+  params: joi.object({
+    postId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'postId is required!'
+      }),
+  }),
+};
 module.exports = {
   createdComment,
   deletedComment,
+  getComments,
 };
