@@ -29,7 +29,7 @@ const createdComment = catchAsync(async (req, res) => {
     userId,
     postId,
     content,
-    imageOrVideo : newUrls || [],
+    imageOrVideo: newUrls || [],
   });
 
   await comment.save();
@@ -47,6 +47,34 @@ const createdComment = catchAsync(async (req, res) => {
   });
 });
 
+const deletedComment = catchAsync(async (req, res) => {
+  const { commentId, userId } = req.body;
+
+  const comment = await Comment.findById(commentId);
+
+  if (!comment) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Comment not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  if (comment.userId.toString() !== userId) {
+    return res.status(httpStatus.FORBIDDEN).json({
+      message: "You do not have permission to delete this comment!",
+      code: httpStatus.FORBIDDEN,
+    });
+  }
+
+  await comment.deleteOne();
+
+  return res.status(httpStatus.OK).json({
+    message: "Delete comment successfully!",
+    code: httpStatus.OK,
+  });
+});
+
 module.exports = {
   createdComment,
+  deletedComment,
 };

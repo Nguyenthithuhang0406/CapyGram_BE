@@ -9,6 +9,7 @@ const commentValidation = require('../validations/comment.validation');
 const upload = require('../middlewares/upload.middleware');
 const uploadFiles = require('../controllers/upload.controller');
 
-commentRoute.post('/create', auth,upload.array('mediaComments', 20), uploadFiles, validate(commentValidation.createdComment), commentController.createdComment);
+commentRoute.post('/create', auth, upload.array('mediaComments', 20), uploadFiles, validate(commentValidation.createdComment), commentController.createdComment);
+commentRoute.delete('/delete', auth, validate(commentValidation.deletedComment), commentController.deletedComment);
 
 module.exports = commentRoute;

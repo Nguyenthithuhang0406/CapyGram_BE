@@ -19,6 +19,23 @@ const createdComment = {
   }),
 };
 
+const deletedComment = {
+  body: joi.object({
+    commentId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'commentId is required!'
+      }),
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'userId is required!'
+      }),
+  }),
+};
 module.exports = {
   createdComment,
+  deletedComment,
 };
