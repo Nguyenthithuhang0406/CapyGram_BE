@@ -173,6 +173,51 @@ const sharePost = catchAsync(async (req, res) => {
   });
 });
 
+
+const getCountLikes = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get count likes successfully!",
+    code: httpStatus.OK,
+    data: {
+      count: post.likes.length,
+    },
+  });
+
+});
+
+const getCountShares = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Post not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  return res.status(httpStatus.OK).json({
+    message: "Get count shares successfully!",
+    code: httpStatus.OK,
+    data: {
+      count: post.shares.length,
+    },
+  });
+
+});
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -181,4 +226,6 @@ module.exports = {
   getPostByUserId,
   likePost,
   sharePost,
+  getCountLikes,
+  getCountShares
 }
