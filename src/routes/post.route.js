@@ -15,4 +15,6 @@ postRoute.get('/getAllPosts', postController.getAllPosts);
 postRoute.get('/getPostByUserId/:userId',auth, validate(postValidation.getPostByUserId), postController.getPostByUserId);
 postRoute.put('/:userId/likePost/:postId', auth, validate(postValidation.likePost), postController.likePost);
 postRoute.put('/:userId/sharePost/:postId', auth, validate(postValidation.sharePost), postController.sharePost);
+postRoute.get('/getCountLikes/:postId', validate(postValidation.getCountLikes), postController.getCountLikes);
+postRoute.get('/getCountShares/:postId', validate(postValidation.getCountShares), postController.getCountShares);
 module.exports = postRoute;

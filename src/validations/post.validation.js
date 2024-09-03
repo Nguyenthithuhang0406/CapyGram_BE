@@ -102,6 +102,28 @@ const sharePost = {
   }),
 };
 
+const getCountLikes = {
+  params: joi.object({
+    postId: joi.string()
+      .custom(ObjectId)
+      .required()
+      .messages({
+        'any.required': 'postId is required!',
+      }),
+  }),
+};
+
+
+const getCountShares = {
+  params: joi.object({
+    postId: joi.string()
+      .custom(ObjectId)
+      .required()
+      .messages({
+        'any.required': 'postId is required!',
+      }),
+  }),
+};
 module.exports = {
   createPost,
   updatePost,
@@ -109,5 +131,7 @@ module.exports = {
   getPostByUserId,
   likePost,
   sharePost,
+  getCountLikes,
+  getCountShares,
 };
 
