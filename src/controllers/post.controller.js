@@ -245,6 +245,25 @@ const getNewFeeds = catchAsync(async (req, res) => {
   });
 });
 
+const getReels = catchAsync(async (req, res) => {
+  const posts = await Post.aggregate([
+    { $addFields: { likesCount: { $size: "$likes" } } },
+    { $sort: { createdAt: -1, likesCount: -1 } },
+  ]);
+
+  const medias = posts.map((post) => post.media).flat();
+
+  const videos = medias.filter((media) => media.includes("Fvideo"));
+
+  return res.status(httpStatus.OK).json({
+    message: "Get reels successfully!",
+    code: httpStatus.OK,
+    data: {
+      videos,
+    },
+  });
+});
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -255,5 +274,6 @@ module.exports = {
   sharePost,
   getCountLikes,
   getCountShares,
-  getNewFeeds
+  getNewFeeds,
+  getReels
 }
