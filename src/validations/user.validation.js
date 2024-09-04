@@ -127,4 +127,23 @@ const updateProfile = {
       }),
   }),
 }
-module.exports = { registerValidation, login, refreshToken, getUserById, searchUserByUsernameOrFullname, updateProfile };
+
+const getSussgestion = {
+  params: joi.object({
+    userId: joi.string()
+      .required()
+      .custom(ObjectId)
+      .messages({
+        'any.required': 'User ID không được để trống',
+      }),
+  }),
+}
+module.exports = {
+  registerValidation,
+  login,
+  refreshToken,
+  getUserById,
+  searchUserByUsernameOrFullname,
+  updateProfile,
+  getSussgestion
+};
