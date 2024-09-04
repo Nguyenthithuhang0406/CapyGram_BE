@@ -294,5 +294,14 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 
 });
-module.exports = { register, verifyOtp, login, getRefreshToken, getUserById, searchUserByUsernameOrFullname, uploadAvatar, updateProfile };
+module.exports = { 
+  register, 
+  verifyOtp,
+  login,
+  getRefreshToken,
+  getUserById,
+  searchUserByUsernameOrFullname,
+  uploadAvatar,
+  updateProfile
+};
 

@@ -124,6 +124,18 @@ const getCountShares = {
       }),
   }),
 };
+
+const getNewFeeds = {
+  params: joi.object({
+    userId: joi.string()
+      .custom(ObjectId)
+      .required()
+      .messages({
+        'any.required': 'userId is required!',
+      }),
+  }),
+};
+
 module.exports = {
   createPost,
   updatePost,
@@ -133,5 +145,6 @@ module.exports = {
   sharePost,
   getCountLikes,
   getCountShares,
+  getNewFeeds,
 };
 

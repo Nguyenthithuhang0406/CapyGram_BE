@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
+const catchAsync = require("../utils/catchAsync");
 const Post = require("../models/post.model");
-const catchAsync = require("../utils/catchAsync")
+const User = require("../models/user.model");
 
 const createPost = catchAsync(async (req, res) => {
   const { content, media, userId, newUrls } = req.body;
@@ -218,6 +219,32 @@ const getCountShares = catchAsync(async (req, res) => {
 
 });
 
+
+const getNewFeeds = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "User not found!",
+      code: httpStatus.NOT_FOUND,
+    });
+  }
+
+  const following = user.following;
+
+  const posts = await Post.find({ userId: { $in: following } }).sort({ createdAt: -1 });
+
+  return res.status(httpStatus.OK).json({
+    message: "Get new feeds successfully!",
+    code: httpStatus.OK,
+    data: {
+      posts,
+    },
+  });
+});
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -227,5 +254,6 @@ module.exports = {
   likePost,
   sharePost,
   getCountLikes,
-  getCountShares
+  getCountShares,
+  getNewFeeds
 }
