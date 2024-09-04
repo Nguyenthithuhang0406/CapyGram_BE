@@ -294,6 +294,40 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 
 });
+
+const getSussgestion = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const followings = user.following;
+
+  const friends = await User.find({ _id: { $in: followings } });
+
+  let suggestions = [];
+
+  friends.forEach((user) => {
+    suggestions.push(user.following);
+  });
+
+  const uniqueSet = [...new Set(suggestions.flat())];
+
+  const uniqueSuggestion = uniqueSet.filter((id) => !followings.includes(id.toString()) && id.toString() != userId);
+
+  const suggestedUser = await User.find({ _id: { $in: uniqueSuggestion } });
+
+  return res.status(httpStatus.OK).json({
+    message: "Get sussgestion successfully!",
+    code: httpStatus.OK,
+    data: {
+      suggestions: suggestedUser,
+    },
+  });
+
+});
 module.exports = { 
   register, 
   verifyOtp,
@@ -302,6 +336,7 @@ module.exports = {
   getUserById,
   searchUserByUsernameOrFullname,
   uploadAvatar,
-  updateProfile
+  updateProfile,
+  getSussgestion
 };
 

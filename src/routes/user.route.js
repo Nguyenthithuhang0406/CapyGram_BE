@@ -17,5 +17,6 @@ userRoute.post('/search', auth, validate(userValidation.searchUserByUsernameOrFu
 userRoute.post('/upload-avatar', auth, upload.single('avatar'), userController.uploadAvatar);
 // userRoute.post('/upload-files', upload.array('media', 20), uploadFiles);
 userRoute.put('/updateProfile/:userId', auth, validate(userValidation.updateProfile), userController.updateProfile);
+userRoute.get('/getSuggestion/:userId', auth, validate(userValidation.getSussgestion), userController.getSussgestion);
 
 module.exports = userRoute;
